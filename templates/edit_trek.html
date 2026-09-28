@@ -1,0 +1,97 @@
+{% extends 'admin_dashboard.html' %}
+
+{% block title %} Create Trek {% endblock %}
+
+{% block heading %}EDIT TREK{% endblock %}
+{% block content %}
+<div class="d-flex justify-content-end">
+    <a href="{{ request.referrer or url_for('admin.managetrek') }}" class="btn btn-secondary">Back</a>
+</div>
+    <div class="container mt-4">
+    <form action="{{ url_for('admin.edittrek', trek_id=trek.id) }}" method="POST" class="needs-validation" novalidate>
+        
+        <div class="form-floating mb-3">
+            <input type="text" class="form-control" name="trekname" value="{{ trek.name }}" placeholder="Trek Name" required>
+            <label for="trekname">Trek Name</label>
+        </div>
+
+        <div class="form-floating mb-3">
+            <input type="text" class="form-control" name="location" value="{{ trek.location }}" placeholder="Location" required>
+            <label for="location">Location</label>
+        </div>
+
+        <div class="form-floating mb-3">
+            <input type="number" class="form-control" name="duration" value="{{ trek.duration }}" placeholder="Duration (days)" required>
+            <label for="duration">Duration (days)</label>
+        </div>
+
+        <div class="form-floating mb-3">
+            <select class="form-select" name="difficulty" required>
+                <option selected disabled>None</option>
+                <option value="easy">Easy</option>
+                <option value="moderate">Moderate</option>
+                <option value="hard">Hard</option>
+            </select>
+            <label for="difficulty">Difficulty</label>
+        </div>
+
+        <div class="form-floating mb-3">
+            <input type="number" class="form-control" name="available_slots" value="{{ trek.available_slots }}" placeholder="Available Slots" required>
+            <label for="available_slots">Available Slots</label>
+        </div>
+
+        <div class="form-floating mb-3">
+            <input type="date" class="form-control" name="start_date" value="{{ trek.start_date }}" required>
+            <label for="start_date">Start Date</label>
+        </div>
+
+        <div class="form-floating mb-3">
+            <input type="date" class="form-control" name="end_date" value="{{ trek.end_date }}" required>
+            <label for="end_date">End Date</label>
+        </div>
+
+        <div class="form-floating mb-3">
+            <select class="form-select" name="assigned_staff_id" required>
+                <option disabled>None</option>
+                {% for sta in all_staff %}
+                    <option value="{{ sta.id }}" 
+                    {% if sta.id == trek.staff_id %}selected{% endif %}>{{ sta.username }}
+                    </option>
+                {% endfor %}
+            </select>
+            <label for="assigned_staff">Assign Staff</label>
+        </div>
+
+        <div class="form-floating mb-3">
+            <select class="form-select" name="status" required>
+                <option disabled>None</option>
+                <option value="pending">Pending</option>
+                <option value="approved">Approved</option>
+                <option value="open">Open</option>
+                <option value="closed">Closed</option>
+                <option value="completed">Completed</option>  
+            </select>
+            <label for="status">Status</label>
+        </div>
+
+        <div class="form-floating mb-3">
+            <textarea class="form-control" name="description" value="{{ trek.description }}" placeholder="Description" style="height: 100px"></textarea>
+            <label for="description">Description</label>
+        </div>
+
+        <div class="form-floating mb-3">
+            <input type="text" class="form-control" name="image" value="{{ trek.image }}" placeholder="Image URL">
+            <label for="image">Image URL</label>
+        </div>
+
+        <div class="d-flex justify-content-between">
+            <button type="submit" class="btn btn-primary">Add Changes</button>
+            <button type="reset" class="btn btn-secondary">Clear Form</button>
+        </div>
+
+        {% if error %}
+            <div class="alert alert-danger mt-3">{{ error }}</div>
+        {% endif %}
+    </form>
+    </div>
+{% endblock %}

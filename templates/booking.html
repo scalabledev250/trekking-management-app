@@ -1,0 +1,42 @@
+{% extends 'admin_dashboard.html' %}
+
+{% block title %}Manage Bookings{% endblock %}
+
+{% block heading %}BOOKING MANAGER{% endblock %}
+
+{% block content %}
+<div class="row m-4">
+        <div class="col-md-12">
+            <div class="card">
+                <div class="card-header"><h2>Bookings ({{ booklen }})</h2></div>
+                <div class="card-body">                                     
+                    <table class="table ms-4 mt-4 table-bordered table-striped">
+                        <thead>
+                            <tr>
+                                <th scope="col">ID</th>
+                                <th scope="col">Trekker</th>
+                                <th scope="col">Trek Name</th>
+                                <th scope="col">Booking date</th>
+                                <th scope="col">Status</th>
+                            </tr>
+                        </thead>                   
+                        {% for booking in bookings %}
+                        <tbody>
+                            <tr>
+                                <td>{{ booking.id }}</td>
+                                <td>{{ booking.trekker.user.username }}</td>
+                                <td>{{ booking.treks.name }}</td>
+                                <td>{{ booking.booking_date }}</td>
+                                <td>{{ booking.status.value }}</td>
+                            </tr>
+                        </tbody>
+                        {% endfor %}
+                    </table>
+                    {% if not bookings %}
+                    <p>No bookings.</p>
+                    {% endif %}  
+                </div>
+            </div>
+        </div>
+</div>
+{% endblock %}

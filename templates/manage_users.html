@@ -1,0 +1,85 @@
+{% extends "admin_dashboard.html" %}
+
+{% block title %}Manage Users{% endblock %}
+
+{% block heading %}USER MANAGER{% endblock %}
+
+{% block content %}
+<div class="row m-4">
+        <div class="col-md-12">
+            <div class="card">
+                <div class="card-header"><h2>Trekkers ({{ tlen }})</h2></div>
+                <div class="card-body">                                     
+                    <table class="table ms-4 mt-4 table-bordered table-striped">
+                        <thead>
+                            <tr>
+                                <th scope="col">ID</th>
+                                <th scope="col">Name</th>
+                                <th scope="col">Email</th>
+                                <th scope="col">Action</th>
+                            </tr>
+                        </thead>                   
+                        {% for trekker in trekkers %}
+                        <tbody>
+                            <tr>
+                                <td>{{ trekker.id }}</td>
+                                <td>{{ trekker.user.username }}</td>
+                                <td>{{ trekker.user.email }}</td>
+                                <td>
+                                    <div class="d-flex justify-content-between">
+                                    <form action="{{ url_for('admin.manageusers') }}" method="POST">
+                                        <input type="hidden" name="trekker_id" value="{{ trekker.id }}">
+                                        <button type="submit" name="action" value="blacklist" class="btn btn-primary me-2">Blacklist</button>
+                                        <button type="submit" name="action" value="remove" class="btn btn-secondary">Remove</button>
+                                    </form>        
+                                </div>        
+                                </td>
+                            </tr>
+                        </tbody>
+                        {% endfor %}
+                    </table>
+                    {% if not trekkers %}
+                    <p>No registered trekkers.</p>
+                    {% endif %}  
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="row m-4">
+        <div class="col-md-12">
+            <div class="card">
+                <div class="card-header"><h2>Blacklisted Trekkers ({{ blen }})</h2></div>
+                <div class="card-body">                                     
+                    <table class="table ms-4 mt-4 table-bordered table-striped">
+                        <thead>
+                            <tr>
+                                <th scope="col">ID</th>
+                                <th scope="col">Name</th>
+                                <th scope="col">Email</th>
+                                <th scope="col">Action</th>
+                            </tr>
+                        </thead>                   
+                        {% for trekker in blist %}
+                        <tbody>
+                            <tr>
+                                <td>{{ trekker.id }}</td>
+                                <td>{{ trekker.user.username }}</td>
+                                <td>{{ trekker.user.email }}</td>
+                                <td>
+                                    <form action="{{ url_for('admin.manageusers') }}" method="POST">
+                                        <input type="hidden" name="trekker_id" value="{{ trekker.id }}">
+                                        <button type="submit" name="action" value="rembl" class="btn btn-primary me-2">Remove from Blacklist</button>
+                                    </form>                
+                                </td>
+                            </tr>
+                        </tbody>
+                        {% endfor %}
+                    </table>
+                    {% if not blist %}
+                    <p>No blacklisted trekkers.</p>
+                    {% endif %}  
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}

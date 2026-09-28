@@ -1,0 +1,38 @@
+{% extends 'staff_dashboard.html' %}
+
+{% block title %}Manage Treks{% endblock %}
+
+{% block heading %}MANAGE TREKS{% endblock %}
+
+{% block content %}
+<table class="table ms-4 mt-4 table-bordered table-striped">
+    <thead>
+        <tr>
+            <th>ID</th>
+            <th>Name</th>
+            <th>Location</th>
+            <th>Difficulty</th>
+            <th>Available Slots</th>
+            <th>Status</th>
+            <th>Actions</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for trek in assigned_treks %}
+        <tr>
+            <td>{{ trek.id }}</td>
+            <td>{{ trek.name }}</td>
+            <td>{{ trek.location }}</td>
+            <td>{{ trek.difficulty.name }}</td>
+            <td>{{ trek.available_slots }}</td>
+            <td>{{ trek.status.value }}</td>
+            <td>
+                <div class="d-flex justify-content-between"></div>
+                    <button class="btn"><a href="{{ url_for('staff.edittrek', trek_id=trek.id) }}">Edit</a></button>
+                </div>
+            </td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+{% endblock %}

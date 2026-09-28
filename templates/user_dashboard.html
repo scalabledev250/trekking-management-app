@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}User dashboard{% endblock %}</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-sRIl4kxILFvY47J16cr9ZwB07vP4J8+LH7qKQnuqkuIAvNWLzeN8tE5YBujZqJLB" crossorigin="anonymous">
+    <link rel="stylesheet" href="{{ url_for('static', filename='dashboard.css') }}">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js" integrity="sha384-FKyoEForCGlyvwx9Hj09JcYn3nv7wiPVlz7YYwJrWVcXK/BmnVDxM+D2scQbITxI" crossorigin="anonymous"></script>
+</head>
+<body>
+    <div style="padding-top: 70px;"></div>
+    <h1 style="text-align: center; margin: 2px">{% block heading %}USER DASHBOARD{% endblock %}</h1>
+    {% block content %}
+    <h2 style="margin-left: 20px">Welcome, {{ name }}!</h2>
+    <div class="row m-4">
+        <div class="col-md-12">
+            <div class="card mb-4">
+                <div class="card-header"><h2>Available Treks ({{ alen }})</h2></div>
+                <div class="card-body">
+                    <table class="table ms-4 mt-4 table-bordered table-striped">
+                        <thead>
+                            <tr>
+                                <th scope="col">Trek Name</th>
+                                <th scope="col">Location</th>
+                                <th scope="col">Difficulty</th>
+                                <th scope="col">Duration</th>
+                                <th scope="col">Slots</th>
+                                <th scope="col">Action</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for trek in available_treks %}
+                            <tr>
+                                <td>{{ trek.name }}</td>
+                                <td>{{ trek.location }}</td>
+                                <td>{{ trek.difficulty.value }}</td>
+                                <td>{{ trek.duration }}</td>
+                                <td>{{ trek.available_slots }}</td>
+                                <td>
+                                    <div class="d-flex justify-content-between">
+                                            <form method="POST" action="{{ url_for('user.booktrek') }}">
+                                                <input type="hidden" name="trek_id" value="{{ trek.id }}">
+                                                <button type="submit">Book Trek</button>
+                                            </form>
+                                    </div>
+                                </td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                    {% if not available_treks %}
+                    <p>No open treks available right now.</p>
+                    {% endif %}
+                </div>
+            </div>
+            <div class="card">
+                <div class="card-header"><h2>My Bookings ({{ booklen }})</h2></div>
+                <div class="card-body">                                     
+                    <table class="table ms-4 mt-4 table-bordered table-striped">
+                        <thead>
+                            <tr>
+                                <th scope="col">ID</th>
+                                <th scope="col">Trekker</th>
+                                <th scope="col">Trek Name</th>
+                                <th scope="col">Booking date</th>
+                                <th scope="col">Status</th>
+                            </tr>
+                        </thead>                   
+                        {% for booking in my_bookings %}
+                        <tbody>
+                            <tr>
+                                <td>{{ booking.id }}</td>
+                                <td>{{ booking.trekker.user.username }}</td>
+                                <td>{{ booking.treks.name }}</td>
+                                <td>{{ booking.booking_date }}</td>
+                                <td>{{ booking.status.value }}</td>
+                            </tr>
+                        </tbody>
+                        {% endfor %}
+                    </table>
+                    {% if not my_bookings %}
+                    <p>No bookings.</p>
+                    {% endif %}  
+                </div>
+            </div>
+        </div>
+</div>
+{% endblock %}
+    <nav class="navbar bg-body-tertiary fixed-top">
+        <div class="container-fluid">
+            <button class="navbar-toggler" type="button" data-bs-toggle="offcanvas" data-bs-target="#offcanvasNavbar" aria-controls="offcanvasNavbar" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="offcanvas offcanvas-start" tabindex="-1" id="offcanvasNavbar" aria-labelledby="offcanvasNavbarLabel">
+                <div class="offcanvas-header">
+                    <h5 class="offcanvas-title" id="offcanvasNavbarLabel">Menu</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+                </div>
+                <div class="offcanvas-body">
+                    <ul class="navbar-nav justify-content-end flex-grow-1 pe-3">
+                        <li class="nav-item">
+                            <a class="nav-link" href="{{ url_for('user.userdashboard') }}">Dashboard</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link active" aria-current="page" href="#">My Treks</a>
+                        </li>
+                        <li class="nav-item">   
+                            <a class="nav-link" href="{{ url_for('user.mybookings') }}">My Bookings</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="{{ url_for('user.history') }}">Booking History</a>
+                        </li>
+                        <li>
+                            <a class="nav-link" href="{{ url_for('auth.logout') }}">Logout</a>
+                        </li>
+                    </ul>
+                </div>
+                </div>
+        </div>
+    </nav>
+</div>
+</body>
+</html>
